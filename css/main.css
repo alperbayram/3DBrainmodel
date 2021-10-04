@@ -1,26 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap');
-
-h6{
+h6 {
     color: white;
     font-size: 55px;
     font-family: 'Caveat', cursive;
-    display: flex;
-    justify-content: center; 
-    align-items:center;
+    text-align: center;
 }
+
 body {
-	margin: 0;
+    margin: 0;
     background-color: black;
     display: flex;
-    justify-content: center; 
-    align-items:center;
-    overflow: hidden;
+    justify-content: center;
     height: 100%;
     width: 100%;
-  
+    overflow-x: hidden;
 }
-canvas { 
+
+canvas {
     width: 100%;
-    height: 100% 
-    }
-    
+    height: 100%;
+    display: block;
+}
