@@ -42,10 +42,10 @@ function init() {
 
     scene = new THREE.Scene();
 
-    const ambientLight = new THREE.AmbientLight( 0x880808, 0.9 );
+    const ambientLight = new THREE.AmbientLight( 0xbf0000, 0.9 );
     scene.add( ambientLight );
 
-    const pointLight = new THREE.PointLight( 0xffffff, 0.8 );
+    const pointLight = new THREE.PointLight( 0xeeeeee, 0.4 );
     camera.add( pointLight );
     scene.add( camera );
 
@@ -117,19 +117,13 @@ function init() {
    // document.addEventListener('mousemove', onDocumentMouseMove, false);
 
     window.addEventListener('resize', onWindowResize, false);
-
-
 }
 
 
 function onWindowResize() {
-
     camera.aspect = sizeX / sizeY;
     camera.updateProjectionMatrix();
-
     renderer.setSize(sizeX, sizeY);
-
-
 }
 
 function animate() {
@@ -139,16 +133,8 @@ function animate() {
     render();
 }
 
-
-
-
-
-
 function render() {
-
-
     camera.lookAt(scene.position);
-
     renderer.render(scene, camera);
 }
 
