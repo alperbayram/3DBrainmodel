@@ -8,24 +8,21 @@
 
 
 */
-
+import * as THREE from '../js/three.module.js';
+import { OrbitControls } from "../js/OrbitControls.js";
+import { OBJLoader } from '../js/OBJLoader.js';
 
 var container;
-var camera, scene, renderer;
-var directionalLight;
-
-var mouseX = 0,
-    mouseY = 0;
+var camera, scene, renderer,controls;
 
 
-var windowHalfX = window.innerWidth / 2;
-var windowHalfY = window.innerHeight / 2;
+
 
 var sizeX = 500,
     sizeY = 500;
 
+    let object;
 
-var brain;
 
 
 
@@ -45,39 +42,79 @@ function init() {
 
     scene = new THREE.Scene();
 
-    var ambient = new THREE.AmbientLight(0x111111);
-    scene.add(ambient);
+    const ambientLight = new THREE.AmbientLight( 0x880808, 0.9 );
+    scene.add( ambientLight );
 
-    directionalLight = new THREE.DirectionalLight(0xffeedd);
-    directionalLight.position.set(0, 0, -1);
-    scene.add(directionalLight);
+    const pointLight = new THREE.PointLight( 0xffffff, 0.8 );
+    camera.add( pointLight );
+    scene.add( camera );
 
 
+    function loadModel() {
 
-    var manager = new THREE.LoadingManager();
-    manager.onProgress = function(item, loaded, total) {
+        object.traverse( function ( child ) {
 
-        console.log(item, loaded, total);
+            if ( child.isMesh ) child.material.map = texture;
+
+        } );
+
+        scene.add( object );
+
+    }
+
+    const manager = new THREE.LoadingManager( loadModel );
+
+    manager.onProgress = function ( item, loaded, total ) {
+
+        console.log( item, loaded, total );
 
     };
 
+    // texture
 
+    const textureLoader = new THREE.TextureLoader( manager );
+    const texture = textureLoader.load( '../obj/brain.jpg' );
 
+    // model
 
-    var loader = new THREE.OBJLoader(manager);
-    loader.load('obj/freesurff.OBJ', function(object) {
+    function onProgress( xhr ) {
 
-        brain = object;
-        object.position.y = 0;
-        scene.add(object);
+        if ( xhr.lengthComputable ) {
 
-    });
+            const percentComplete = xhr.loaded / xhr.total * 100;
+            console.log( 'model ' + Math.round( percentComplete, 2 ) + '% downloaded' );
+
+        }
+
+    }
+
+    function onError() {}
+
+    const loader = new OBJLoader( manager );
+    loader.load( '../obj/freesurff.Obj', function ( obj ) {
+
+        object = obj;
+
+    }, onProgress, onError );
+
+    //
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(500, 500);
 
     container.appendChild(renderer.domElement);
-    document.addEventListener('mousemove', onDocumentMouseMove, false);
+
+
+    controls = new OrbitControls(camera, renderer.domElement);
+            //    controls.listenToKeyEvents(window); // optional
+
+                //controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
+				controls.minDistance = 10;
+				controls.maxDistance = 80;
+				controls.rotateSpeed = 3.0;
+               
+				controls.maxPolarAngle = Math.PI / 2;
+   // document.addEventListener('mousemove', onDocumentMouseMove, false);
 
     window.addEventListener('resize', onWindowResize, false);
 
@@ -87,32 +124,18 @@ function init() {
 
 function onWindowResize() {
 
-    const canvas = renderer.domElement;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    if (canvas.width !== width || canvas.height !== height) {
-        // you must pass false here or three.js sadly fights the browser
-        renderer.setSize(width, height, false);
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
+    camera.aspect = sizeX / sizeY;
+    camera.updateProjectionMatrix();
 
-        // set render target sizes here
-    }
+    renderer.setSize(sizeX, sizeY);
+
 
 }
-
-
-function onDocumentMouseMove(event) {
-    mouseX = (event.clientX - windowHalfX) / 2;
-    mouseY = (event.clientY - windowHalfY) / 2;
-}
-
-//
-
-
 
 function animate() {
     requestAnimationFrame(animate);
+    controls.update();
+
     render();
 }
 
@@ -122,21 +145,6 @@ function animate() {
 
 
 function render() {
-
-    var r = 7;
-    var s = 0.01;
-
-
-    camera.position.x = r * Math.sin(mouseX * s) * Math.cos(mouseY / 2 * s);
-    camera.position.z = -r * Math.cos(mouseX * s) * Math.cos(mouseY / 2 * s);
-    camera.position.y = r * Math.sin(mouseY / 2 * s);
-
-    directionalLight.position.x = r * Math.sin(mouseX * s) * Math.cos(mouseY / 2 * s);
-    directionalLight.position.z = -r * Math.cos(mouseX * s) * Math.cos(mouseY / 2 * s);
-    directionalLight.position.y = r * Math.sin(mouseY / 2 * s);
-
-    brain.rotation.y += 0.01;
-    brain.rotation.x += 0.001;
 
 
     camera.lookAt(scene.position);

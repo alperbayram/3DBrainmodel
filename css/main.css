@@ -4,20 +4,26 @@ h6 {
     font-size: 55px;
     font-family: 'Caveat', cursive;
     text-align: center;
+    margin: 0;
+    top: 5px;
 }
 
 body {
     margin: 0;
     background-color: black;
-    display: flex;
-    justify-content: center;
+    text-align: center;
     height: 100%;
     width: 100%;
     overflow-x: hidden;
 }
 
-canvas {
-    width: 100%;
-    height: 100%;
-    display: block;
+section{
+    display: flex;
+    justify-content: center;
+}
+#brain{
+    position: absolute;
+    box-sizing: border-box;
+    text-align: center;
+    z-index: 1;
 }
