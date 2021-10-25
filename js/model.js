@@ -8,14 +8,12 @@
 
 
 */
-import * as THREE from '../js/three.module.js';
-import { OrbitControls } from "../js/OrbitControls.js";
-import { OBJLoader } from '../js/OBJLoader.js';
+import * as THREE from './three.module.js';
+import { OrbitControls } from "./OrbitControls.js";
+import { OBJLoader } from './OBJLoader.js';
 
 var container;
 var camera, scene, renderer,controls;
-
-
 
 
 var sizeX = 500,
@@ -42,10 +40,10 @@ function init() {
 
     scene = new THREE.Scene();
 
-    const ambientLight = new THREE.AmbientLight( 0xbf0000, 0.9 );
+    const ambientLight = new THREE.AmbientLight( 0x880808, 0.9 );
     scene.add( ambientLight );
-
-    const pointLight = new THREE.PointLight( 0xeeeeee, 0.4 );
+    
+    const pointLight = new THREE.PointLight( 0xffffff, 0.8 );
     camera.add( pointLight );
     scene.add( camera );
 
